@@ -1,0 +1,19 @@
+{
+    "name": "arakaki-yuji/cosmosdb-client",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {"CosmosdbClient\\": "src/"}
+    },
+    "authors": [
+        {
+            "name": "Arakaki-Yuji",
+            "email": "arakaji0830@gmail.com"
+        }
+    ]
+}
