@@ -91,7 +91,6 @@ class DocumentTest extends TestCase
 
         // query
         $sql = "SELECT * FROM c WHERE c.id = @id";
-        var_dump($sql);
         $result = $document->query($this->dbId, $this->collId,
                                    $sql,
                                    [['name'=> '@id', 'value' => '1']]);
