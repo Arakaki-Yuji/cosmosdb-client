@@ -18,15 +18,11 @@ class Document{
         $headers = $this->core->getAuthHeaders('POST', 'docs', $resourceLink);
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/' . $resourceLink . '/docs';
-        $client = new Client();
         $options = [
             'headers' => $headers,
             'body' => json_encode($docs)
         ];
-        $response = $client->request('POST', $resourceUri, $options);
-        $body = $response->getBody();
-        $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('POST', $resourceUri, $options);
     }
 
     public function get($dbId, $collId, $docId)
@@ -34,15 +30,11 @@ class Document{
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId.'/docs/'.$docId;
         $headers = $this->core->getAuthHeaders('GET', 'docs', $resourceLink);
         $baseUri = $this->core->makeBaseUri();
-        $client = new Client();
         $resourceUri = $baseUri . '/' . $resourceLink;
         $options = [
             'headers' => $headers
         ];
-        $response = $client->request('GET', $resourceUri, $options);
-        $body = $response->getBody();
-        $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('GET', $resourceUri, $options);
     }
 
     public function list($dbId, $collId, $max = null)
@@ -53,15 +45,11 @@ class Document{
             $headers['x-ms-max-item-count'] = $max;
         }
         $baseUri = $this->core->makeBaseUri();
-        $client = new Client();
         $resourceUri = $baseUri . '/' . $resourceLink . '/docs';
         $options = [
             'headers' => $headers
         ];
-        $response = $client->request('GET', $resourceUri, $options);
-        $body = $response->getBody();
-        $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('GET', $resourceUri, $options);
     }
 
     public function replace($dbId, $collId, $docId, $doc)
@@ -69,16 +57,12 @@ class Document{
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId.'/docs/'.$docId;
         $headers = $this->core->getAuthHeaders('PUT', 'docs', $resourceLink);
         $baseUri = $this->core->makeBaseUri();
-        $client = new Client();
         $resourceUri = $baseUri . '/' . $resourceLink;
         $options = [
             'headers' => $headers,
             'body' => json_encode($doc)
         ];
-        $response = $client->request('PUT', $resourceUri, $options);
-        $body = $response->getBody();
-        $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('PUT', $resourceUri, $options);
     }
 
     public function delete($dbId, $collId, $docId)
@@ -86,14 +70,12 @@ class Document{
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId.'/docs/'.$docId;
         $headers = $this->core->getAuthHeaders('DELETE', 'docs', $resourceLink);
         $baseUri = $this->core->makeBaseUri();
-        $client = new Client();
         $resourceUri = $baseUri . '/' . $resourceLink;
         $options = [
             'headers' => $headers,
         ];
-        $response = $client->request('DELETE', $resourceUri, $options);
-        $status = $response->getStatusCode();
-        return $status == '204';
+        $res = $this->core->request('DELETE', $resourceUri, $options);
+        return is_null($res);
     }
 
     public function query($dbId, $collId, $query, $params)
@@ -103,7 +85,6 @@ class Document{
         $headers['x-ms-documentdb-isquery'] = 'True';
         $headers['Content-Type'] = 'application/query+json';
         $baseUri = $this->core->makeBaseUri();
-        $client = new Client();
         $resourceUri = $baseUri . '/' . $resourceLink .'/docs';
         $body = [
             'query' => $query,
@@ -113,9 +94,6 @@ class Document{
             'headers' => $headers,
             'body' => json_encode($body)
         ];
-
-        $response = $client->request('POST', $resourceUri, $options);
-        $bodyContentString = $response->getBody()->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('POST', $resourceUri, $options);
     }
 }

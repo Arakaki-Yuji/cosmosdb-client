@@ -18,14 +18,10 @@ class Database
         $headers = $this->core->getAuthHeaders('GET', 'dbs', '');
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/dbs';
-        $client = new Client();
         $options = [
             'headers' => $headers,
         ];
-        $response = $client->request('GET', $resourceUri, $options);
-        $body = $response->getBody();
-        $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('GET', $resourceUri, $options);
     }
 
     public function get($dbId)
@@ -33,14 +29,10 @@ class Database
         $headers = $this->core->getAuthHeaders('GET', 'dbs', 'dbs/' . $dbId);
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/dbs/' . $dbId;
-        $client = new Client();
         $options = [
             'headers' => $headers
         ];
-        $response = $client->request('GET', $resourceUri, $options);
-        $body = $response->getBody();
-        $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('GET', $resourceUri, $options);
     }
 
     public function create($dbId)
@@ -48,16 +40,11 @@ class Database
         $headers = $this->core->getAuthHeaders('POST', 'dbs', '');
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/dbs/';
-        $client = new Client();
         $options = [
             'headers' => $headers,
             'body' => json_encode(['id' => $dbId])
         ];
-        $response = $client->request('POST', $resourceUri,$options);
-
-        $body = $response->getBody();
-        $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        return $this->core->request('POST', $resourceUri,$options);
     }
 
     public function delete($dbId)
@@ -65,14 +52,11 @@ class Database
         $headers = $this->core->getAuthHeaders('DELETE', 'dbs', 'dbs/'.$dbId);
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/dbs/'.$dbId;
-        $client = new Client();
         $options = [
             'headers' => $headers
         ];
-        $response = $client->request('DELETE', $resourceUri,$options);
-
-        $status = $response->getStatusCode();
-        return $status == '204';
+        $res = $this->core->request('DELETE', $resourceUri,$options);
+        return is_null($res);
     }
 
 }

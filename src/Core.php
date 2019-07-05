@@ -1,15 +1,19 @@
 <?php
 namespace CosmosdbClient;
+use GuzzleHttp\Client;
 
 class Core
 {
     private $masterkey;
     private $account;
+    private $client;
 
     public function __construct(string $masterkey,
                                 string $account){
         $this->masterkey = $masterkey;
         $this->account = $account;
+
+        $this->client = new Client();
     }
 
     public function getAuthHeaders(string $verb,
@@ -39,7 +43,16 @@ class Core
         );
     }
 
-    public function makeBaseUri(){
+    public function makeBaseUri()
+    {
         return 'https://' . $this->account . '.documents.azure.com';
+    }
+
+    public function request($method, $resourceUri, $options)
+    {
+        $response = $this->client->request($method, $resourceUri, $options);
+        $body = $response->getBody();
+        $bodyContentString = $body->getContents();
+        return json_decode($bodyContentString, true);
     }
 }
