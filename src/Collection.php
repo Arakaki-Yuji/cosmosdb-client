@@ -67,15 +67,20 @@ class Collection {
         return is_null($res);
     }
 
-    public function replace($dbId, $collId, $indexingPolicy){
+    public function replace($dbId, $collId, $indexingPolicy, $partitionKey){
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId;
         $headers = $this->core->getAuthHeaders('PUT', 'colls', $resourceLink);
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/' . $resourceLink;
         $body = [
             'id' => $collId,
-            'indexingPolicy' => $indexingPolicy
         ];
+        if($indexingPolicy){
+            $body['indexingPolicy'] = $indexingPolicy;
+        }
+        if($partitionKey){
+            $body['partitionKey'] = $partitionKey;
+        }
         $options = [
             'headers' => $headers,
             'body' => json_encode($body)

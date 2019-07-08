@@ -20,7 +20,10 @@ class DocumentTest extends TestCase
         $this->collId = 'test-cosmosdb-client-docs-coll';
         try{
             $this->database->create($this->dbId);
-            $this->collection->create($this->dbId, $this->collId);
+            $this->collection->create($this->dbId,
+                                      $this->collId,
+                                      null,
+                                      ['paths' => ['/name']]);
         }catch(\Exception $e){
         }
     }
@@ -43,7 +46,7 @@ class DocumentTest extends TestCase
             'name' => 'test',
             'email' => 'example@test.com'
         ];
-        $result = $document->create($this->dbId, $this->collId, $docs);
+        $result = $document->create($this->dbId, $this->collId, $docs, $docs['name']);
         $this->assertArrayHasKey('id', $result);
         $this->assertArrayHasKey('name', $result);
         $this->assertArrayHasKey('email', $result);
@@ -53,7 +56,7 @@ class DocumentTest extends TestCase
         $this->assertArrayHasKey('_etag', $result);
 
         // get
-        $result = $document->get($this->dbId, $this->collId, $docId);
+        $result = $document->get($this->dbId, $this->collId, $docId, $docs['name']);
         $this->assertArrayHasKey('id', $result);
         $this->assertArrayHasKey('name', $result);
         $this->assertArrayHasKey('email', $result);
@@ -72,18 +75,20 @@ class DocumentTest extends TestCase
             'name' => 'test',
             'email' => 'example@test.com'
         ];
-        $document->create($this->dbId, $this->collId,$doc2);
+        $document->create($this->dbId, $this->collId,$doc2, $doc2['name']);
         $result = $document->list($this->dbId, $this->collId, 1);
         $this->assertEquals(1, count($result['Documents']));
         $result = $document->list($this->dbId, $this->collId);
         $this->assertEquals(2, count($result['Documents']));
 
         // replace
+        $updateDoc = ['id' => $docId, 'name' => 'test', 'email' => 'example+update@test.com'];
         $result = $document->replace($this->dbId, $this->collId, $docId,
-                                     ['id' => $docId, 'name' => 'replacedName']);
+                                     $updateDoc,
+                                     $updateDoc['name']);
         $this->assertArrayHasKey('id', $result);
         $this->assertArrayHasKey('name', $result);
-        $this->assertEquals('replacedName', $result['name']);
+        $this->assertEquals('example+update@test.com', $result['email']);
         $this->assertArrayHasKey('_rid', $result);
         $this->assertArrayHasKey('_ts', $result);
         $this->assertArrayHasKey('_self', $result);
@@ -102,7 +107,7 @@ class DocumentTest extends TestCase
         $this->assertEquals('1', $result['Documents'][0]['id']);
         
         // delete
-        $result = $document->delete($this->dbId, $this->collId, $docId);
+        $result = $document->delete($this->dbId, $this->collId, $docId, $docs['name']);
         $this->assertEquals(true, $result);
 
     }

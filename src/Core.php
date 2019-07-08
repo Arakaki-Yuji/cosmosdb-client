@@ -23,7 +23,7 @@ class Core
         $xMsDate = gmdate('D, d M Y H:i:s T', strtotime('+2 minutes'));
         $master = 'master';
         $token = '1.0';
-        $xMsVersion = '2017-02-22';
+        $xMsVersion = '2018-12-31';
         $key = base64_decode($this->masterkey);
         $stringToSign = $verb . "\n" .
                         $resourceType . "\n" .

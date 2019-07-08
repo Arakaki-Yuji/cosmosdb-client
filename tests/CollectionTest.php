@@ -45,7 +45,7 @@ class CollectionTest extends TestCase
         $result = $collection->create($this->dbId,
                                       $collId,
                                       null,
-                                      null);
+                                      ['paths' => ['/Name']]);
         $this->assertArrayHasKey('id', $result);
         $this->assertArrayHasKey('_rid', $result);
         $this->assertArrayHasKey('_ts', $result);
@@ -80,7 +80,10 @@ class CollectionTest extends TestCase
         $this->assertArrayHasKey('DocumentCollections', $result);
 
         // replace
-        $result = $collection->replace($this->dbId, $collId, ['indexingMode' => 'lazy']);
+        $result = $collection->replace($this->dbId,
+                                       $collId,
+                                       ['indexingMode' => 'lazy'],
+                                       ['paths' => ['/Name']]);
         $this->assertArrayHasKey('id', $result);
         $this->assertArrayHasKey('_rid', $result);
         $this->assertArrayHasKey('_ts', $result);
