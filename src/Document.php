@@ -12,10 +12,13 @@ class Document{
         $this->core = $core;
     }
 
-    public function create($dbId, $collId, $docs)
+    public function create($dbId, $collId, $docs, $partitionKeyValue = null)
     {
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId;
         $headers = $this->core->getAuthHeaders('POST', 'docs', $resourceLink);
+        if(is_null($partitionKeyValue) === false){
+            $headers['x-ms-documentdb-partitionkey'] = json_encode([$partitionKeyValue]);
+        }
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/' . $resourceLink . '/docs';
         $options = [
