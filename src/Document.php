@@ -12,7 +12,7 @@ class Document{
         $this->core = $core;
     }
 
-    public function create($dbId, $collId, $docs, $partitionKeyValue = null)
+    public function create($dbId, $collId, $docs, $partitionKeyValue = null, array $addHeaders = null)
     {
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId;
         $headers = $this->core->getAuthHeaders('POST', 'docs', $resourceLink);
@@ -86,18 +86,20 @@ class Document{
         $options = [
             'headers' => $headers,
         ];
-        var_dump($options);
         $res = $this->core->request('DELETE', $resourceUri, $options);
         return is_null($res);
     }
 
-    public function query($dbId, $collId, $query, $params)
+    public function query($dbId, $collId, $query, $params, array $addHeaders = null)
     {
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId;
         $headers = $this->core->getAuthHeaders('POST', 'docs', $resourceLink);
         $headers['x-ms-documentdb-isquery'] = 'True';
         $headers['x-ms-documentdb-query-enablecrosspartition'] = 'True';
         $headers['Content-Type'] = 'application/query+json';
+        if($addHeaders){
+            $headers = array_merge($headers, $addHeaders);
+        }
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/' . $resourceLink .'/docs';
         $body = [
