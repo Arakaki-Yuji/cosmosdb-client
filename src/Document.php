@@ -19,6 +19,9 @@ class Document{
         if(is_null($partitionKeyValue) === false){
             $headers['x-ms-documentdb-partitionkey'] = json_encode([$partitionKeyValue]);
         }
+        if($addHeaders){
+            $headers = array_merge($headers, $addHeaders);
+        }
         $baseUri = $this->core->makeBaseUri();
         $resourceUri = $baseUri . '/' . $resourceLink . '/docs';
         $options = [
@@ -90,7 +93,7 @@ class Document{
         return is_null($res);
     }
 
-    public function query($dbId, $collId, $query, $params, array $addHeaders = null)
+    public function query($dbId, $collId, $query, $params, array $addHeaders = null, $returnWithHeaders = false)
     {
         $resourceLink = 'dbs/'.$dbId.'/colls/'.$collId;
         $headers = $this->core->getAuthHeaders('POST', 'docs', $resourceLink);
@@ -110,6 +113,6 @@ class Document{
             'headers' => $headers,
             'body' => json_encode($body)
         ];
-        return $this->core->request('POST', $resourceUri, $options);
+        return $this->core->request('POST', $resourceUri, $options, $returnWithHeaders);
     }
 }

@@ -99,13 +99,25 @@ class DocumentTest extends TestCase
         $result = $document->query($this->dbId, $this->collId,
                                    $sql,
                                    [['name'=> '@id', 'value' => '1']]);
-        
+
         $this->assertArrayHasKey('_rid', $result);
         $this->assertArrayHasKey('_count', $result);
         $this->assertArrayHasKey('Documents', $result);
         $this->assertEquals(1, count($result['Documents']));
         $this->assertEquals('1', $result['Documents'][0]['id']);
-        
+
+        // 返り値にheaderも含める
+        $result = $document->query($this->dbId,
+                                   $this->collId,
+                                   $sql,
+                                   [['name'=> '@id', 'value' => '1']],
+                                   null,
+                                   true);
+
+        $this->assertArrayHasKey('headers', $result);
+        $this->assertArrayHasKey('body', $result);
+        $this->assertArrayHasKey('x-ms-request-charge', $result['headers']);
+
         // delete
         $result = $document->delete($this->dbId, $this->collId, $docId, $docs['name']);
         $this->assertEquals(true, $result);

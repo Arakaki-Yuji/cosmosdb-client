@@ -48,11 +48,19 @@ class Core
         return 'https://' . $this->account . '.documents.azure.com';
     }
 
-    public function request($method, $resourceUri, $options)
+    public function request($method, $resourceUri, $options, $returnWithHeaders = false)
     {
         $response = $this->client->request($method, $resourceUri, $options);
         $body = $response->getBody();
         $bodyContentString = $body->getContents();
-        return json_decode($bodyContentString, true);
+        $bodyJson = json_decode($bodyContentString, true);
+        if($returnWithHeaders){
+            return [
+                'headers' => $response->getHeaders(),
+                'body' => $bodyJson
+            ];
+        }else{
+            return $bodyJson;
+        }
     }
 }
