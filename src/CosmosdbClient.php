@@ -12,9 +12,10 @@ class CosmosdbClient
     private $document;
 
     public function __construct(string $masterkey,
-                                string $account)
+                                string $account,
+                                array $options = [])
     {
-        $core = new Core($masterkey, $account);
+        $core = new Core($masterkey, $account, $options);
         $this->database = new Database($core);
         $this->collection = new Collection($core);
         $this->document = new Document($core);

@@ -9,11 +9,12 @@ class Core
     private $client;
 
     public function __construct(string $masterkey,
-                                string $account){
+                                string $account,
+                                array $options = []){
         $this->masterkey = $masterkey;
         $this->account = $account;
 
-        $this->client = new Client();
+        $this->client = new Client($options);
     }
 
     public function getAuthHeaders(string $verb,
